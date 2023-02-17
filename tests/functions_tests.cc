@@ -1,36 +1,39 @@
 #include <gtest/gtest.h>
-
 #include <functions/functions.h>
 
-TEST(FunctionsTests, SumStubTest1) {
-    // Arrange
-    int lhs = 5;
-    
-    // Act
-    int r = fact(lhs);
-    
-    // Assert
-    EXPECT_EQ(r, 120);
+TEST(AccountTests, AccountTest1) {
+
+	int type = 1;	// 1 - рассчётный счёт; 2 - депозитарный; 3 - кредитный
+	user_bank::User Matvey("Pikhurov Matvey\0");
+	Matvey.create_new_account(type, 330000);
+	float balance = Matvey.accounts[0].getBalance();
+	EXPECT_EQ(balance ,330000);
 }
 
-TEST(FunctionsTests, SumStubTest2) {
-    // Arrange
-    int lhs = -1;
-    
-    // Act
-    int r = fact(lhs);
-    
-    // Assert
-    EXPECT_EQ(r, 0);
+TEST(AccountTests, AccountTest2) {
+	int type = 2;	// 1 - рассчётный счёт; 2 - депозитарный; 3 - кредитный
+	user_bank::User Matvey("Pikhurov Matvey\0");
+	Matvey.create_new_account(type, 330000, 12.4);
+	float balance = Matvey.accounts[0].getBalance();
+	EXPECT_EQ(balance, 330000);
 }
 
-TEST(FunctionsTests, SumStubTest3) {
-    // Arrange
-    int lhs = 10;
+TEST(AccountTests, AccountTest3) {
+   
+}
 
-    // Act
-    int r = fact(lhs);
+TEST(AccountTests, AccountTest4) {
+   
+}
 
-    // Assert
-    EXPECT_EQ(r, 3628800);
+TEST(AccountTests, AccountTest5) {
+  
+}
+
+TEST(AccountTests, AccountTest6) {
+   
+}
+
+TEST(AccountTests, AccountTest7) {
+   
 }

@@ -1,51 +1,83 @@
 #include <functions/functions.h>
 #include <math.h>
+#include <string.h>
+#define N 255
+#define MAX_COUNT_ACCOUNTS 7
 
-int sum_stub(int lhs, int rhs) {
-    return lhs + rhs;
+using namespace user_bank;
+
+Account::Account() {
+        balance = 0;
+        TypeScore::calculated;
 }
-
-int fact(int n) {
-    if (n == 0) return 1;
-    if (n < 0) return 0;
-    return n * fact(n - 1);
-}
-
-class user_bank::Account{
-private: 
-    enum class TypeScore
+Account::Account(int type_of_score) {
+    switch (type_of_score)
     {
-        calculated, deposit, credit
-    };
-    char all_name;
-    float balance;
-    float percent;
-public:
-    float accrual() {
-        switch (TypeScore)
-        {
-        case user_bank::Account::TypeScore::calculated:
-
-            break;
-        case user_bank::Account::TypeScore::deposit:
-            this->balance *= this->percent / 12;
-            break;
-        case user_bank::Account::TypeScore::credit:
-            float bal = this->balance;
-            if (bal < 0)
-                bal = abs(bal) * (this->percent) / 12;
-            break;
-        default:
-            break;
-        };
+    case 1:
+        balance = 0;
+        type = TypeScore::calculated;
+        break;
+    case 2:
+        balance = 0;
+        percent = 0;
+        type = TypeScore::deposit;
+        break;
+    case 3:
+        balance = 0;
+        percent = 0;
+        type = TypeScore::credit;
+        break;
+    default:
+        break;
     }
-    char* getName() {
-        return &(this->all_name);
+
+};
+void Account::accrual(float balance, float percent) {
+    switch (type)
+    {
+    case user_bank::Account::TypeScore::calculated:
+
+        break;
+    case user_bank::Account::TypeScore::deposit:
+        this->balance *= this->percent / 12;
+        break;
+    case user_bank::Account::TypeScore::credit:
+        float bal = this->balance;
+        if (bal < 0)
+            bal = fabs(bal) * (this->percent) / 12;
+        break;
     };
-    float getBalance() {
-        return this->balance;
-    };
-    float getPercent() {
-        return this->percent;
-    };
-}
+};
+float Account::getBalance() {
+    return this->balance;
+};
+float Account::getPercent() {
+    return this->percent;
+};
+
+
+User::User(const char* name) {
+    strcpy(all_name, name);
+};
+char* User::get_all_name() {
+    return this->all_name;
+};
+int User::find_max_balance() {
+    float max_balance = accounts[0].getBalance();
+    int index = 0;
+    for (int i = 1; i < MAX_COUNT_ACCOUNTS; i++)
+    {
+        if (max_balance >= accounts[i].getBalance())
+            continue;
+        else {
+            max_balance = accounts[i].getBalance();
+            index = i;
+        }
+    }
+    return index;
+};
+void User::create_new_account(int type, float balance, ...) {
+    accounts[count_accounts] = user_bank::Account(type);
+    count_accounts += 1;
+};
+
