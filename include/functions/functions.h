@@ -6,22 +6,26 @@
 
 
 namespace user_bank {
+	enum class TypeScore {
+		none = 0,
+		calculated,
+		deposit,
+		credit
+	};
 	class Account {
+		friend User;
 	private:
-		enum class TypeScore {
-			calculated = 1,
-			deposit,
-			credit
-		};
-		TypeScore type;
-		float balance;
-		float percent;
+		TypeScore type = TypeScore::none;
+		float balance = 0;
+		float percent = 0;
 	public:
 		Account();
-		Account(int type_of_score);
+		Account(TypeScore type_of_score);
 		void accrual(float balance, float percent);
 		float getBalance();
+		bool setBalance(float balance);
 		float getPercent();
+		bool setPercent(float percent);
 	};
 
 	class User {
@@ -30,10 +34,12 @@ namespace user_bank {
 		int count_accounts = 0;
 	public:
 		Account accounts[MAX_COUNT_ACCOUNTS];
+		User();
 		User(const char* name);
 		char* get_all_name();
 		int find_max_balance();
-		void create_new_account(int type, float balance, ...);
+		bool create_new_account(TypeScore type, float balance);
+		bool create_new_account(TypeScore type, float balance, float percent);
 	};
 };
 #endif
