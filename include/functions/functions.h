@@ -13,7 +13,7 @@ namespace user_bank {
 		credit
 	};
 	class Account {
-		friend User;
+		friend class User;
 	private:
 		TypeScore type = TypeScore::none;
 		float balance = 0;
@@ -21,7 +21,7 @@ namespace user_bank {
 	public:
 		Account();
 		Account(TypeScore type_of_score);
-		void accrual(float balance, float percent);
+		void accrual();
 		float getBalance();
 		bool setBalance(float balance);
 		float getPercent();

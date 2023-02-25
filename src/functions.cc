@@ -45,21 +45,33 @@ Account::Account(TypeScore type_of_score) {
         cerr << e.what() << endl;
     }
 };
-void Account::accrual(float balance, float percent) {
-    switch (type)
+void Account::accrual() {
+    try
     {
-    case user_bank::TypeScore::calculated:
+        switch (type)
+        {
+        case user_bank::TypeScore::calculated:
 
-        break;
-    case user_bank::TypeScore::deposit:
-        this->balance *= this->percent / 12;
-        break;
-    case user_bank::TypeScore::credit:
-        float bal = this->balance;
-        if (bal < 0)
-            bal = fabs(bal) * (this->percent) / 12;
-        break;
-    };
+            break;
+        case user_bank::TypeScore::deposit:
+            this->balance += this->balance * this->percent / 12;
+            break;
+        case user_bank::TypeScore::credit:
+            if (this->balance < 0) {
+                this->balance -= fabs(this->balance) * (this->percent) / 12;
+            }
+            else
+                cout << "Баланс не отрицательный, поэтому изменений нет" << endl;
+            break;
+        default:
+            throw runtime_error("Тип аккаунта не позволяет совершить действия с его счётом!");
+            break;
+        };
+    }
+    catch (const runtime_error& e)
+    {
+        cerr << e.what() << endl;
+    }
 };
 float Account::getBalance() {
     return this->balance;
@@ -137,7 +149,7 @@ bool User::create_new_account(TypeScore type, float balance) {
         if (type != TypeScore::calculated)
             throw runtime_error("Ошибка программиста, для всех типов счёта, кроме рассчётного необходимо передать кол-во процентво годовых!");
         if (balance < 0)
-            throw runtime_error("Нельзя создать счёт с балансом меньше 0");
+            throw runtime_error("Нельзя создать не кредитный счёт с балансом меньше 0");
         accounts[count_accounts] = Account(type);
         accounts[count_accounts].setBalance(balance);
 
@@ -157,12 +169,13 @@ bool User::create_new_account(TypeScore type, float balance, float percent) {
     {
         if (type == TypeScore::calculated)
             throw runtime_error("Ошибка программиста, для рассчётного счёта кол-во процентов годовых не нужно указывать!");
-        if (balance < 0)
-            throw runtime_error("Нельзя создать счёт с балансом меньше 0");
+        if (balance < 0 && type != TypeScore::credit)
+            throw runtime_error("Нельзя создать не кредитный счёт с балансом меньше 0");
         if (percent < 0)
             throw runtime_error("Нельзя создать счёт с кол-вом процентов годовых меньше 0");
         accounts[count_accounts] = Account(type);
         accounts[count_accounts].setBalance(balance);
+        accounts[count_accounts].setPercent(percent);
 
         count_accounts += 1;
         return true;
