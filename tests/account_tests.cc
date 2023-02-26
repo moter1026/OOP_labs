@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include <functions/functions.h>
+#include <account/account.h>
 #include <iostream>
 #include <math.h>
 //namespace user_bank {
@@ -85,10 +85,10 @@ TEST(AccountTests, AccrualTest) {
 	switch (type_of_account)
 	{
 	case user_bank::TypeScore::deposit:
-		EXPECT_EQ(ceil( (second_balance - first_balance)/first_balance * 10 )/10, ceil(percent / 12 * 10) / 10);
+		EXPECT_EQ(ceil( (second_balance - first_balance)/first_balance * 10 )/10 , ceil(percent / 12 * 10) / 10);
 		break;
 	case user_bank::TypeScore::credit:
-		EXPECT_EQ(ceil(fabs( ((first_balance - second_balance)/(first_balance)) )*10)/10, ceil(percent/12*10)/10);
+		EXPECT_EQ(ceil(fabs( ((first_balance - second_balance)/(first_balance)) )*10)/10 , ceil(percent/12*10)/10);
 		break;
 	default:
 		EXPECT_EQ(second_balance, first_balance);
