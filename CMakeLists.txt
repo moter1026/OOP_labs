@@ -18,7 +18,7 @@ if(MSVC)
 endif()
 
 # Объявляем библиотеку
-add_library(account SHARED "include/account/account.h" "src/account.cc")
+add_library(account SHARED "include/account/account.h" "src/account.cc" "include/account/user.h" "src/user.cc")
 target_include_directories(account PUBLIC "include")
 
 # Подключаем googletest
