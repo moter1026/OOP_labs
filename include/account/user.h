@@ -1,4 +1,4 @@
-#define N 255
+﻿#define N 255
 #define MAX_COUNT_ACCOUNTS 16
 #pragma once
 #include "account.h"

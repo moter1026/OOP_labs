@@ -1,4 +1,4 @@
-#include <account/account.h>
+п»ї#include <account/account.h>
 #include <math.h>
 #include <string.h>
 #include <exception>
@@ -10,7 +10,7 @@
 using namespace user_bank;
 using namespace std;
 
-// Определение работы класса Account
+// РћРїСЂРµРґРµР»РµРЅРёРµ СЂР°Р±РѕС‚С‹ РєР»Р°СЃСЃР° Account
 Account::Account(): balance(0), type(TypeScore::calculated) {}
 Account::Account(TypeScore type_of_score): balance(0) {
     switch (type_of_score)
@@ -30,7 +30,7 @@ Account::Account(TypeScore type_of_score): balance(0) {
         break;
     }
     if (type != type_of_score)
-        throw runtime_error("Не удалось присвоить тип счёта");
+        throw runtime_error("РќРµ СѓРґР°Р»РѕСЃСЊ РїСЂРёСЃРІРѕРёС‚СЊ С‚РёРї СЃС‡С‘С‚Р°");
 };
 void        Account::accrual() {
     switch (type)
@@ -41,12 +41,12 @@ void        Account::accrual() {
         this->balance += this->balance * this->percent / 12;
         break;
     case user_bank::TypeScore::credit:
-        if (this->balance < 0) {            //Баланс не отрицательный, поэтому изменений нет
+        if (this->balance < 0) {            //Р‘Р°Р»Р°РЅСЃ РЅРµ РѕС‚СЂРёС†Р°С‚РµР»СЊРЅС‹Р№, РїРѕСЌС‚РѕРјСѓ РёР·РјРµРЅРµРЅРёР№ РЅРµС‚
             this->balance -= fabs(this->balance) * (this->percent) / 12;
         }
         break;
     default:
-        throw runtime_error("Тип аккаунта не позволяет совершить действия с его счётом!");
+        throw runtime_error("РўРёРї Р°РєРєР°СѓРЅС‚Р° РЅРµ РїРѕР·РІРѕР»СЏРµС‚ СЃРѕРІРµСЂС€РёС‚СЊ РґРµР№СЃС‚РІРёСЏ СЃ РµРіРѕ СЃС‡С‘С‚РѕРј!");
         break;
     };
 };
