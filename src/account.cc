@@ -11,7 +11,7 @@ using namespace user_bank;
 using namespace std;
 
 // Определение работы класса Account
-Account::Account(): balance(0), type(TypeScore::calculated) {}
+Account::Account(): balance(0), type(TypeScore::none), percent(0) {}
 Account::Account(TypeScore type_of_score): balance(0) {
     switch (type_of_score)
     {
@@ -64,6 +64,26 @@ void        Account::setPercent(float percent) {
 }
 TypeScore	Account::getType() {
     return this->type;
+}
+Account&    Account::overwrite(TypeScore type_of_score, float balance, float percent) {
+    this->type = type_of_score;
+    this->balance = balance;
+    this->percent = percent;
+
+    return *this;
+}
+Account& Account::overwrite(TypeScore type_of_score, float balance) {
+    this->type = type_of_score;
+    this->balance = balance;
+    this->percent = 0;
+
+    return *this;
+}
+Account&    Account::deleteScore() {
+    this->type = TypeScore::none;
+    this->balance = 0;
+    this->percent = 0;
+    return *this;
 }
 Account&    Account::operator=(const Account& r) {
     this->type = r.type;

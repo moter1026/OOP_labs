@@ -1,6 +1,4 @@
-﻿#ifndef FUNCTIONS_HEADER
-#define FUNCTIONS_HEADER
-#define N 255
+﻿#define N 255
 #define MAX_COUNT_ACCOUNTS 16
 #pragma once
 
@@ -14,7 +12,6 @@ namespace user_bank {
 		credit
 	};
 	class Account {
-		friend class User;
 	private:
 		TypeScore	type = TypeScore::none;
 		float		balance;
@@ -28,7 +25,10 @@ namespace user_bank {
 		float		getPercent();
 		void		setPercent(float percent);
 		TypeScore	getType();
+		Account&	deleteScore();
+		Account&	overwrite(TypeScore type_of_score, float balance, float percent);
+		Account&	overwrite(TypeScore type_of_score, float balance);
 		Account&	operator=(const Account& r);
 	};
 };
-#endif
+

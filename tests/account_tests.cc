@@ -15,7 +15,6 @@ TEST(AccountTests, AccountTest1) {
 	float balance = Matvey[0].getBalance();
 	EXPECT_EQ(balance ,33000);
 }
-
 TEST(AccountTests, AccountTest2) {
 	setlocale(LC_ALL, "ru");
 	cout << "\nВ тесте проверяется создание кредитного счёта" << endl;
@@ -26,10 +25,9 @@ TEST(AccountTests, AccountTest2) {
 	float balance = Matvey[0].getBalance();
 	EXPECT_EQ(balance, 330000);
 }
-
 TEST(AccountTests, AccountTest3) {
 	setlocale(LC_ALL, "ru");
-	cout << "\nВ тесте проверяется создание депозитарного счёта" << endl;
+	cout << "\nВ тесте проверяется создание депозитного счёта" << endl;
 
 	user_bank::TypeScore type = user_bank::TypeScore::deposit;	// 1 - рассчётный счёт; 2 - депозитарный; 3 - кредитный
 	user_bank::User Matvey("Pikhurov Matvey\0");
@@ -37,59 +35,9 @@ TEST(AccountTests, AccountTest3) {
 	float balance = Matvey[0].getBalance();
 	EXPECT_EQ(balance, 100000);
 }
-TEST(AccountTests, AccountTest4) {
+TEST(AccountTests, CreateElemInIndex1) {
 	setlocale(LC_ALL, "ru");
-	cout << "\nВ тесте проверяется создание рассчётного счёта по индексу" << endl;
-	user_bank::User Matvey("Pikhurov Matvey\0");
-
-	// Создаю какое-то число счетов, чтобы проверить создание по индексу
-	user_bank::TypeScore type_deposit = user_bank::TypeScore::deposit;	// 1 - рассчётный счёт; 2 - депозитарный; 3 - кредитный
-	Matvey.create_new_account(type_deposit, 100000, 8.7);
-
-	user_bank::TypeScore type_calculated = user_bank::TypeScore::calculated;
-	Matvey.create_new_account(type_calculated, 30000);
-
-	user_bank::TypeScore type_credit = user_bank::TypeScore::credit;
-	Matvey.create_new_account(type_credit, 150000, 4);
-	//________________________________________________
-	switch (Matvey[0].getType())
-	{
-	case user_bank::TypeScore::calculated:
-			cout << "на данный момент по 0 индесу лежит рассчётный счёт" << endl;
-			break;
-	case user_bank::TypeScore::deposit:
-		cout << "на данный момент по 0 индесу лежит депозитный счёт" << endl;
-		break;
-	case user_bank::TypeScore::credit:
-		cout << "на данный момент по 0 индесу лежит кредитный счёт" << endl;
-		break;
-	default:
-		break;
-	}
-	Matvey.create_new_account_in_index(0, type_calculated, 333333);
-	cout << "\n\n\n" << endl;
-
-	switch (Matvey[0].getType())
-	{
-	case user_bank::TypeScore::calculated:
-		cout << "после создания по индексу 0 там лежит (рассчётный) счёт" << endl;
-		break;
-	case user_bank::TypeScore::deposit:
-		cout << "после создания по индексу 0 там лежит (депозитный) счёт" << endl;
-		break;
-	case user_bank::TypeScore::credit:
-		cout << "после создания по индексу 0 там лежит (кредитный) счёт" << endl;
-		break;
-	default:
-		break;
-	}
-
-	EXPECT_EQ(Matvey[0].getType(), type_calculated);
-}
-
-TEST(AccountTests, AccountTest5) {
-	setlocale(LC_ALL, "ru");
-	cout << "\nВ тесте проверяется создание рассчётного счёта по индексу" << endl;
+	cout << "\nВ тесте проверяется создание депозитного счёта по индексу" << endl;
 	user_bank::User Matvey("Pikhurov Matvey\0");
 
 	// Создаю какое-то число счетов, чтобы проверить создание по индексу
@@ -107,30 +55,31 @@ TEST(AccountTests, AccountTest5) {
 	switch (Matvey[0].getType())
 	{
 	case user_bank::TypeScore::calculated:
-		cout << "на данный момент по 0 индесу лежит рассчётный счёт" << endl;
+		cout << "\nна данный момент по 0 индесу лежит рассчётный счёт" << endl;
 		break;
 	case user_bank::TypeScore::deposit:
-		cout << "на данный момент по 0 индесу лежит депозитный счёт" << endl;
+		cout << "\nна данный момент по 0 индесу лежит депозитный счёт" << endl;
 		break;
 	case user_bank::TypeScore::credit:
-		cout << "на данный момент по 0 индесу лежит кредитный счёт" << endl;
+		cout << "\nна данный момент по 0 индесу лежит кредитный счёт" << endl;
 		break;
 	default:
 		break;
 	}
+
 	Matvey.create_new_account_in_index(0, type_deposit, 333333, 12.3);
-	cout << "\n\n\n" << endl;
+	cout << "\n\n" << endl;
 
 	switch (Matvey[0].getType())
 	{
 	case user_bank::TypeScore::calculated:
-		cout << "после создания по индексу 0 там лежит (рассчётный) счёт" << endl;
+		cout << "\nпосле создания по индексу 0 там лежит (рассчётный) счёт" << endl;
 		break;
 	case user_bank::TypeScore::deposit:
-		cout << "после создания по индексу 0 там лежит (депозитный) счёт" << endl;
+		cout << "\nпосле создания по индексу 0 там лежит (депозитный) счёт" << endl;
 		break;
 	case user_bank::TypeScore::credit:
-		cout << "после создания по индексу 0 там лежит (кредитный) счёт" << endl;
+		cout << "\nпосле создания по индексу 0 там лежит (кредитный) счёт" << endl;
 		break;
 	default:
 		break;
@@ -138,8 +87,56 @@ TEST(AccountTests, AccountTest5) {
 
 	EXPECT_EQ(Matvey[0].getType(), type_deposit);
 }
+TEST(AccountTests, CreateElemInIndex2) {
+	setlocale(LC_ALL, "ru");
+	cout << "\nВ тесте проверяется создание кредитного счёта по индексу" << endl;
+	user_bank::User Matvey("Pikhurov Matvey\0");
 
-TEST(AccountTests, AccountTest6) {
+	// Создаю какое-то число счетов, чтобы проверить создание по индексу
+	user_bank::TypeScore type_deposit = user_bank::TypeScore::deposit;	// 1 - рассчётный счёт; 2 - депозитарный; 3 - кредитный
+	Matvey.create_new_account(type_deposit, 100000, 8.7);
+
+	user_bank::TypeScore type_calculated = user_bank::TypeScore::calculated;
+	Matvey.create_new_account(type_calculated, 30000);
+
+	user_bank::TypeScore type_credit = user_bank::TypeScore::credit;
+	Matvey.create_new_account(type_credit, 150000, 4);
+	//________________________________________________
+	switch (Matvey[1].getType())
+	{
+	case user_bank::TypeScore::calculated:
+		cout << "\nна данный момент по 1 индесу лежит рассчётный счёт" << endl;
+		break;
+	case user_bank::TypeScore::deposit:
+		cout << "\nна данный момент по 1 индесу лежит депозитный счёт" << endl;
+		break;
+	case user_bank::TypeScore::credit:
+		cout << "\nна данный момент по 1 индесу лежит кредитный счёт" << endl;
+		break;
+	default:
+		break;
+	}
+	Matvey.create_new_account_in_index(1, type_credit, -333333, 10.6);
+	cout << "\n\n" << endl;
+
+	switch (Matvey[1].getType())
+	{
+	case user_bank::TypeScore::calculated:
+		cout << "\nпосле создания по индексу 1 там лежит (рассчётный) счёт" << endl;
+		break;
+	case user_bank::TypeScore::deposit:
+		cout << "\nпосле создания по индексу 1 там лежит (депозитный) счёт" << endl;
+		break;
+	case user_bank::TypeScore::credit:
+		cout << "\nпосле создания по индексу 1 там лежит (кредитный) счёт" << endl;
+		break;
+	default:
+		break;
+	}
+
+	EXPECT_EQ(Matvey[1].getType(), type_credit);
+}
+TEST(AccountTests, CreateElemInIndex3) {
 	setlocale(LC_ALL, "ru");
 	cout << "\nВ тесте проверяется создание рассчётного счёта по индексу" << endl;
 	user_bank::User Matvey("Pikhurov Matvey\0");
@@ -154,41 +151,138 @@ TEST(AccountTests, AccountTest6) {
 	user_bank::TypeScore type_credit = user_bank::TypeScore::credit;
 	Matvey.create_new_account(type_credit, 150000, 4);
 	//________________________________________________
-	switch (Matvey[0].getType())
+	switch (Matvey[2].getType())
 	{
 	case user_bank::TypeScore::calculated:
-		cout << "на данный момент по 0 индесу лежит рассчётный счёт" << endl;
+		cout << "\nна данный момент по 2 индесу лежит рассчётный счёт" << endl;
 		break;
 	case user_bank::TypeScore::deposit:
-		cout << "на данный момент по 0 индесу лежит депозитный счёт" << endl;
+		cout << "\nна данный момент по 2 индесу лежит депозитный счёт" << endl;
 		break;
 	case user_bank::TypeScore::credit:
-		cout << "на данный момент по 0 индесу лежит кредитный счёт" << endl;
+		cout << "\nна данный момент по 2 индесу лежит кредитный счёт" << endl;
 		break;
 	default:
 		break;
 	}
-	Matvey.create_new_account_in_index(0, type_credit, -333333, 10.6);
-	cout << "\n\n\n" << endl;
+	Matvey.create_new_account_in_index(2, type_calculated, 333333);
+	cout << "\n\n" << endl;
 
-	switch (Matvey[0].getType())
+	switch (Matvey[2].getType())
 	{
 	case user_bank::TypeScore::calculated:
-		cout << "после создания по индексу 0 там лежит (рассчётный) счёт" << endl;
+		cout << "\nпосле создания по индексу 2 там лежит (рассчётный) счёт" << endl;
 		break;
 	case user_bank::TypeScore::deposit:
-		cout << "после создания по индексу 0 там лежит (депозитный) счёт" << endl;
+		cout << "\nпосле создания по индексу 2 там лежит (депозитный) счёт" << endl;
 		break;
 	case user_bank::TypeScore::credit:
-		cout << "после создания по индексу 0 там лежит (кредитный) счёт" << endl;
+		cout << "\nпосле создания по индексу 2 там лежит (кредитный) счёт" << endl;
 		break;
 	default:
 		break;
 	}
 
-	EXPECT_EQ(Matvey[0].getType(), type_credit);
+	EXPECT_EQ(Matvey[2].getType(), type_calculated);
 }
+TEST(AccountTests, CreateElemInBigIndex1) {
+	setlocale(LC_ALL, "ru");
+	cout << "\nВ тесте проверяется создание аккаунта в свободной части массива счетов(необходимо, чтобы элементы были расположены по порядку)" << endl;
 
+	user_bank::User Matvey("Pikhurov Matvey");
+	user_bank::TypeScore type_of_new_account = user_bank::TypeScore::credit;
+
+	Matvey.create_new_account(user_bank::TypeScore::deposit, 22222, 12.7);
+	Matvey.create_new_account(user_bank::TypeScore::credit, 33333, 7.7);
+	Matvey.create_new_account(user_bank::TypeScore::calculated, 44444);
+
+	EXPECT_EQ(Matvey[Matvey.get_count_accounts()].getType(), user_bank::TypeScore::none);
+
+	Matvey.create_new_account_in_index(Matvey.get_count_accounts() + 3, type_of_new_account, -111111, 1.6);
+
+	EXPECT_EQ(Matvey[Matvey.get_count_accounts() - 1].getType(), type_of_new_account);
+
+	Matvey.create_new_account_in_index(Matvey.get_count_accounts() - 3, type_of_new_account, -111111, 2.6);
+
+	EXPECT_EQ(Matvey[Matvey.get_count_accounts() - 4].getType(), type_of_new_account);
+
+}
+TEST(AccountTests, OverwWrite) {
+	setlocale(LC_ALL, "ru");
+		cout << "\nВ тесте проверяется перезапись элемента" << endl;
+
+		user_bank::User Matvey("Пихуров Матвей");
+		Matvey.create_new_account(user_bank::TypeScore::calculated, 11111);
+		Matvey.create_new_account(user_bank::TypeScore::deposit, 22222, 1.1);
+		Matvey.create_new_account(user_bank::TypeScore::credit, 33333, 2.2);
+		Matvey.create_new_account(user_bank::TypeScore::deposit, 44444, 7.5);
+		Matvey.create_new_account(user_bank::TypeScore::calculated, 55555);
+		Matvey.create_new_account(user_bank::TypeScore::credit, 66666, 5.5);
+
+		EXPECT_EQ(Matvey[3].getType(), user_bank::TypeScore::deposit);
+		EXPECT_EQ(Matvey[3].getBalance(), 44444);
+		EXPECT_EQ(Matvey[3].getPercent(), 7.5);
+
+		Matvey[3].overwrite(user_bank::TypeScore::calculated, 99999);
+
+		EXPECT_EQ(Matvey[3].getType(), user_bank::TypeScore::calculated);
+		EXPECT_EQ(Matvey[3].getBalance(), 99999);
+		EXPECT_EQ(Matvey[3].getPercent(), 0);
+}
+TEST(AccountTests, Perepoln1) {
+	setlocale(LC_ALL, "ru");
+	cout << "\nВ тесте проверяется переполнение массива элементов" << endl;
+
+	user_bank::User Matvey("Пихуров Матвей");
+	Matvey.create_new_account(user_bank::TypeScore::calculated, 11111);
+	Matvey.create_new_account(user_bank::TypeScore::deposit, 22222, 1.1);
+	Matvey.create_new_account(user_bank::TypeScore::credit, 33333, 2.2);
+	Matvey.create_new_account(user_bank::TypeScore::deposit, 44444, 7.5);
+	Matvey.create_new_account(user_bank::TypeScore::calculated, 55555);
+	Matvey.create_new_account(user_bank::TypeScore::credit, 66666, 5.5);
+	Matvey.create_new_account(user_bank::TypeScore::calculated, 11111);
+	Matvey.create_new_account(user_bank::TypeScore::deposit, 22222, 1.1);
+	Matvey.create_new_account(user_bank::TypeScore::credit, 33333, 2.2);
+	Matvey.create_new_account(user_bank::TypeScore::deposit, 44444, 7.5);
+	Matvey.create_new_account(user_bank::TypeScore::calculated, 55555);
+	Matvey.create_new_account(user_bank::TypeScore::credit, 66666, 5.5);
+	Matvey.create_new_account(user_bank::TypeScore::calculated, 11111);
+	Matvey.create_new_account(user_bank::TypeScore::deposit, 22222, 1.1);
+	Matvey.create_new_account(user_bank::TypeScore::credit, 33333, 2.2);
+	Matvey.create_new_account(user_bank::TypeScore::deposit, 44444, 7.5);
+
+
+	Matvey.create_new_account(user_bank::TypeScore::calculated, 11111);
+
+
+}
+TEST(AccountTests, Perepoln2) {
+	setlocale(LC_ALL, "ru");
+	cout << "\nВ тесте проверяется переполнение массива элементов" << endl;
+
+	user_bank::User Matvey("Пихуров Матвей");
+	Matvey.create_new_account(user_bank::TypeScore::calculated, 11111);
+	Matvey.create_new_account(user_bank::TypeScore::deposit, 22222, 1.1);
+	Matvey.create_new_account(user_bank::TypeScore::credit, 33333, 2.2);
+	Matvey.create_new_account(user_bank::TypeScore::deposit, 44444, 7.5);
+	Matvey.create_new_account(user_bank::TypeScore::calculated, 55555);
+	Matvey.create_new_account(user_bank::TypeScore::credit, 66666, 5.5);
+	Matvey.create_new_account(user_bank::TypeScore::calculated, 11111);
+	Matvey.create_new_account(user_bank::TypeScore::deposit, 22222, 1.1);
+	Matvey.create_new_account(user_bank::TypeScore::credit, 33333, 2.2);
+	Matvey.create_new_account(user_bank::TypeScore::deposit, 44444, 7.5);
+	Matvey.create_new_account(user_bank::TypeScore::calculated, 55555);
+	Matvey.create_new_account(user_bank::TypeScore::credit, 66666, 5.5);
+	Matvey.create_new_account(user_bank::TypeScore::calculated, 11111);
+	Matvey.create_new_account(user_bank::TypeScore::deposit, 22222, 1.1);
+	Matvey.create_new_account(user_bank::TypeScore::credit, 33333, 2.2);
+	Matvey.create_new_account(user_bank::TypeScore::deposit, 44444, 7.5);
+
+
+	Matvey.create_new_account_in_index( 5,user_bank::TypeScore::calculated, 11111);
+
+
+}
 TEST(AccountTests, FindMaxBalanceTest) {
 	setlocale(LC_ALL, "ru");
 	cout << "\nВ тесте проверяется нахождение счёта с максимальным балансом" << endl;
@@ -206,8 +300,14 @@ TEST(AccountTests, FindMaxBalanceTest) {
 	int index_of_max_balance_in_accounts = Matvey.find_max_balance();
 	
 	EXPECT_EQ(index_of_max_balance_in_accounts, 2);
-}
 
+	Matvey[0].setBalance(444444);
+
+	index_of_max_balance_in_accounts = Matvey.find_max_balance();
+
+	EXPECT_EQ(index_of_max_balance_in_accounts, 0);
+
+}
 TEST(AccountTests, AccrualTest1) {
 	setlocale(LC_ALL, "ru");
 	cout << "\nВ тесте проверяется начисление процентов на рассчётный счёт" << endl;
@@ -325,4 +425,5 @@ TEST(AccountTests, DeleteScore2) {
 	EXPECT_EQ(before_delete - 1, after_delete);
 
 }
+
 

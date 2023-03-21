@@ -25,9 +25,40 @@ void check_calculated(TypeScore type, float balance) {
         throw runtime_error("Нельзя создать не кредитный счёт с балансом меньше 0");
 }
 // Определение работы класса User
-User::User() {
-    strcpy(all_name, " ");
-};
+//User::User() {
+//    strcpy(all_name, " ");
+//};
+
+Account& User::create_calculated_account(unsigned int index, TypeScore type, float balance) {
+    check_calculated(type, balance);
+    Account& new_el = select_account_with_index(index);
+    new_el = Account(type);    // через конструктор, потому что не могу обратиться к чужой приватной переменной
+    new_el.setBalance(balance);
+    new_el.setPercent(0);
+
+    ++count_accounts;
+    return new_el;
+}
+Account& User::create_dep_or_cre_account(unsigned int index, TypeScore type, float balance, float percent) {
+    check_deposit_or_credit(type, balance, percent);
+    Account& new_el = select_account_with_index(index);
+    new_el = Account(type);    // через конструктор, потому что не могу обратиться к чужой приватной переменной
+    new_el.setBalance(balance);
+    new_el.setPercent(percent);
+
+    ++count_accounts;
+    return new_el;
+}
+Account& User::select_account_with_index(unsigned int index) {
+    //if (index >= MAX_COUNT_ACCOUNTS || index >= count_accounts)
+    if (index >= MAX_COUNT_ACCOUNTS)
+        throw runtime_error("Индекс, передаваемый в функцию, слишком большой");
+    return accounts[index];
+}
+
+
+
+
 User::User(const char* name) {
     strcpy(all_name, name);
 };
@@ -44,35 +75,23 @@ int         User::find_max_balance() {
     int index = 0;
     for (int i = 1; i < count_accounts; i++)
     {
-        if (max_balance >= select_account_with_index(i).getBalance())
-            continue;
-        else {
+        if (max_balance < select_account_with_index(i).getBalance()) {
             max_balance = select_account_with_index(i).getBalance();
             index = i;
         }
     }
     return index;
 };
-Account&    User::create_calculated_account(unsigned int index, TypeScore type, float balance) {
-    check_calculated(type, balance);
-    Account& new_el = select_account_with_index(index);
-    new_el = Account(type);    // через конструктор, потому что не могу обратиться к чужой приватной переменной
-    new_el.setBalance(balance);
-    new_el.setPercent(0);
-
-    ++count_accounts;
-    return new_el;
-}
-Account&    User::create_dep_or_cre_account(unsigned int index, TypeScore type, float balance, float percent) {
-    check_deposit_or_credit(type, balance, percent);
-    Account& new_el = select_account_with_index(index);
-    new_el = Account(type);    // через конструктор, потому что не могу обратиться к чужой приватной переменной
-    new_el.setBalance(balance);
-    new_el.setPercent(percent);
-
-    ++count_accounts;
-    return new_el;
-}
+Account&    User::create_new_account(TypeScore type, float balance) {
+    if (count_accounts >= MAX_COUNT_ACCOUNTS)
+        throw runtime_error("Максимальное кол-во аккаунтов уже создано");
+    return create_calculated_account(count_accounts, type, balance);
+};
+Account&    User::create_new_account(TypeScore type, float balance, float percent) {
+    if (count_accounts >= MAX_COUNT_ACCOUNTS)
+        throw runtime_error("Максимальное кол-во аккаунтов уже создано");
+    return create_dep_or_cre_account(count_accounts, type, balance, percent);
+};
 Account&    User::create_new_account_in_index(unsigned int index, TypeScore type, float balance) {
     check_calculated(type, balance);
     if (count_accounts >= MAX_COUNT_ACCOUNTS)
@@ -102,25 +121,12 @@ Account&    User::create_new_account_in_index(unsigned int index, TypeScore type
             Account& right = select_account_with_index(count_accounts - i);
             right = left;
         }
-        else
+        else if(index < count_accounts)
             return create_dep_or_cre_account(index, type, balance, percent);
+        else
+            return create_dep_or_cre_account(count_accounts, type, balance, percent);
+
     }
-}
-Account&    User::create_new_account(TypeScore type, float balance) {
-    if (count_accounts >= MAX_COUNT_ACCOUNTS)
-        throw runtime_error("Максимальное кол-во аккаунтов уже создано");
-    return create_calculated_account(count_accounts, type, balance);
-};
-Account&    User::create_new_account(TypeScore type, float balance, float percent) {
-    if (count_accounts >= MAX_COUNT_ACCOUNTS)
-        throw runtime_error("Максимальное кол-во аккаунтов уже создано");
-    return create_dep_or_cre_account(count_accounts, type, balance, percent);
-};
-Account&    User::select_account_with_index(unsigned int index) {
-    //if (index >= MAX_COUNT_ACCOUNTS || index >= count_accounts)
-    if (index >= MAX_COUNT_ACCOUNTS)
-        throw runtime_error("Индекс, передаваемый в функцию, слишком большой");
-    return accounts[index];
 }
 Account     User::delete_account_with_index(unsigned int index) {
     if (!count_accounts)
@@ -139,9 +145,7 @@ Account     User::delete_account_with_index(unsigned int index) {
         else
         {
             Account& del_el = select_account_with_index(i);
-            del_el.type = TypeScore::none;
-            del_el.balance = 0;
-            del_el.percent = 0;
+            del_el.deleteScore();
             --count_accounts;
             return copy_account;
         }
