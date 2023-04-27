@@ -11,7 +11,8 @@ TEST(AccountTests, AccountTest1) {
 
 	user_bank::TypeScore type = user_bank::TypeScore::calculated;
 	user_bank::User Matvey("Пихуров Матвей\0");
-	Matvey.create_new_account(type, 33000);
+	Matvey.create_account(type, 33000);
+	//Matvey.create_new_account(new user_bank::Account(type, 33000));
 	float balance = Matvey[0].getBalance();
 	EXPECT_EQ(balance ,33000);
 }
@@ -21,7 +22,7 @@ TEST(AccountTests, AccountTest2) {
 
 	user_bank::TypeScore type = user_bank::TypeScore::credit;	// 1 - рассчётный счёт; 2 - депозитарный; 3 - кредитный
 	user_bank::User Matvey("Pikhurov Matvey\0");
-	Matvey.create_new_account(type, 330000, 12.4);
+	Matvey.create_account(type, 330000, 12.4);
 	float balance = Matvey[0].getBalance();
 	EXPECT_EQ(balance, 330000);
 }
@@ -31,7 +32,7 @@ TEST(AccountTests, AccountTest3) {
 
 	user_bank::TypeScore type = user_bank::TypeScore::deposit;	// 1 - рассчётный счёт; 2 - депозитарный; 3 - кредитный
 	user_bank::User Matvey("Pikhurov Matvey\0");
-	Matvey.create_new_account(type, 100000, 8.7);
+	Matvey.create_account(type, 100000, 8.7);
 	float balance = Matvey[0].getBalance();
 	EXPECT_EQ(balance, 100000);
 }
@@ -42,15 +43,15 @@ TEST(AccountTests, CreateElemInIndex1) {
 
 	// Создаю какое-то число счетов, чтобы проверить создание по индексу
 	user_bank::TypeScore type_credit = user_bank::TypeScore::credit;
-	Matvey.create_new_account(type_credit, 150000, 10);
+	Matvey.create_account(type_credit, 150000, 10);
 
 	user_bank::TypeScore type_deposit = user_bank::TypeScore::deposit;	// 1 - рассчётный счёт; 2 - депозитарный; 3 - кредитный
-	Matvey.create_new_account(type_deposit, 100000, 8.7);
+	Matvey.create_account(type_deposit, 100000, 8.7);
 
 	user_bank::TypeScore type_calculated = user_bank::TypeScore::calculated;
-	Matvey.create_new_account(type_calculated, 30000);
+	Matvey.create_account(type_calculated, 30000);
 
-	Matvey.create_new_account(type_credit, 150000, 4);
+	Matvey.create_account(type_credit, 150000, 4);
 	//________________________________________________
 	switch (Matvey[0].getType())
 	{
@@ -94,13 +95,13 @@ TEST(AccountTests, CreateElemInIndex2) {
 
 	// Создаю какое-то число счетов, чтобы проверить создание по индексу
 	user_bank::TypeScore type_deposit = user_bank::TypeScore::deposit;	// 1 - рассчётный счёт; 2 - депозитарный; 3 - кредитный
-	Matvey.create_new_account(type_deposit, 100000, 8.7);
+	Matvey.create_account(type_deposit, 100000, 8.7);
 
 	user_bank::TypeScore type_calculated = user_bank::TypeScore::calculated;
-	Matvey.create_new_account(type_calculated, 30000);
+	Matvey.create_account(type_calculated, 30000);
 
 	user_bank::TypeScore type_credit = user_bank::TypeScore::credit;
-	Matvey.create_new_account(type_credit, 150000, 4);
+	Matvey.create_account(type_credit, 150000, 4);
 	//________________________________________________
 	switch (Matvey[1].getType())
 	{
@@ -143,13 +144,13 @@ TEST(AccountTests, CreateElemInIndex3) {
 
 	// Создаю какое-то число счетов, чтобы проверить создание по индексу
 	user_bank::TypeScore type_deposit = user_bank::TypeScore::deposit;	// 1 - рассчётный счёт; 2 - депозитарный; 3 - кредитный
-	Matvey.create_new_account(type_deposit, 100000, 8.7);
+	Matvey.create_account(type_deposit, 100000, 8.7);
 
 	user_bank::TypeScore type_calculated = user_bank::TypeScore::calculated;
-	Matvey.create_new_account(type_calculated, 30000);
+	Matvey.create_account(type_calculated, 30000);
 
 	user_bank::TypeScore type_credit = user_bank::TypeScore::credit;
-	Matvey.create_new_account(type_credit, 150000, 4);
+	Matvey.create_account(type_credit, 150000, 4);
 	//________________________________________________
 	switch (Matvey[2].getType())
 	{
@@ -192,9 +193,9 @@ TEST(AccountTests, CreateElemInBigIndex1) {
 	user_bank::User Matvey("Pikhurov Matvey");
 	user_bank::TypeScore type_of_new_account = user_bank::TypeScore::credit;
 
-	Matvey.create_new_account(user_bank::TypeScore::deposit, 22222, 12.7);
-	Matvey.create_new_account(user_bank::TypeScore::credit, 33333, 7.7);
-	Matvey.create_new_account(user_bank::TypeScore::calculated, 44444);
+	Matvey.create_account(user_bank::TypeScore::deposit, 22222, 12.7);
+	Matvey.create_account(user_bank::TypeScore::credit, 33333, 7.7);
+	Matvey.create_account(user_bank::TypeScore::calculated, 44444);
 
 	EXPECT_EQ(Matvey[Matvey.get_count_accounts()].getType(), user_bank::TypeScore::none);
 
@@ -212,12 +213,12 @@ TEST(AccountTests, OverwWrite) {
 		cout << "\nВ тесте проверяется перезапись элемента" << endl;
 
 		user_bank::User Matvey("Пихуров Матвей");
-		Matvey.create_new_account(user_bank::TypeScore::calculated, 11111);
-		Matvey.create_new_account(user_bank::TypeScore::deposit, 22222, 1.1);
-		Matvey.create_new_account(user_bank::TypeScore::credit, 33333, 2.2);
-		Matvey.create_new_account(user_bank::TypeScore::deposit, 44444, 7.5);
-		Matvey.create_new_account(user_bank::TypeScore::calculated, 55555);
-		Matvey.create_new_account(user_bank::TypeScore::credit, 66666, 5.5);
+		Matvey.create_account(user_bank::TypeScore::calculated, 11111);
+		Matvey.create_account(user_bank::TypeScore::deposit, 22222, 1.1);
+		Matvey.create_account(user_bank::TypeScore::credit, 33333, 2.2);
+		Matvey.create_account(user_bank::TypeScore::deposit, 44444, 7.5);
+		Matvey.create_account(user_bank::TypeScore::calculated, 55555);
+		Matvey.create_account(user_bank::TypeScore::credit, 66666, 5.5);
 
 		EXPECT_EQ(Matvey[3].getType(), user_bank::TypeScore::deposit);
 		EXPECT_EQ(Matvey[3].getBalance(), 44444);
@@ -234,25 +235,25 @@ TEST(AccountTests, Perepoln1) {
 	cout << "\nВ тесте проверяется переполнение массива элементов" << endl;
 
 	user_bank::User Matvey("Пихуров Матвей");
-	Matvey.create_new_account(user_bank::TypeScore::calculated, 11111);
-	Matvey.create_new_account(user_bank::TypeScore::deposit, 22222, 1.1);
-	Matvey.create_new_account(user_bank::TypeScore::credit, 33333, 2.2);
-	Matvey.create_new_account(user_bank::TypeScore::deposit, 44444, 7.5);
-	Matvey.create_new_account(user_bank::TypeScore::calculated, 55555);
-	Matvey.create_new_account(user_bank::TypeScore::credit, 66666, 5.5);
-	Matvey.create_new_account(user_bank::TypeScore::calculated, 11111);
-	Matvey.create_new_account(user_bank::TypeScore::deposit, 22222, 1.1);
-	Matvey.create_new_account(user_bank::TypeScore::credit, 33333, 2.2);
-	Matvey.create_new_account(user_bank::TypeScore::deposit, 44444, 7.5);
-	Matvey.create_new_account(user_bank::TypeScore::calculated, 55555);
-	Matvey.create_new_account(user_bank::TypeScore::credit, 66666, 5.5);
-	Matvey.create_new_account(user_bank::TypeScore::calculated, 11111);
-	Matvey.create_new_account(user_bank::TypeScore::deposit, 22222, 1.1);
-	Matvey.create_new_account(user_bank::TypeScore::credit, 33333, 2.2);
-	Matvey.create_new_account(user_bank::TypeScore::deposit, 44444, 7.5);
+	Matvey.create_account(user_bank::TypeScore::calculated, 11111);
+	Matvey.create_account(user_bank::TypeScore::deposit, 22222, 1.1);
+	Matvey.create_account(user_bank::TypeScore::credit, 33333, 2.2);
+	Matvey.create_account(user_bank::TypeScore::deposit, 44444, 7.5);
+	Matvey.create_account(user_bank::TypeScore::calculated, 55555);
+	Matvey.create_account(user_bank::TypeScore::credit, 66666, 5.5);
+	Matvey.create_account(user_bank::TypeScore::calculated, 11111);
+	Matvey.create_account(user_bank::TypeScore::deposit, 22222, 1.1);
+	Matvey.create_account(user_bank::TypeScore::credit, 33333, 2.2);
+	Matvey.create_account(user_bank::TypeScore::deposit, 44444, 7.5);
+	Matvey.create_account(user_bank::TypeScore::calculated, 55555);
+	Matvey.create_account(user_bank::TypeScore::credit, 66666, 5.5);
+	Matvey.create_account(user_bank::TypeScore::calculated, 11111);
+	Matvey.create_account(user_bank::TypeScore::deposit, 22222, 1.1);
+	Matvey.create_account(user_bank::TypeScore::credit, 33333, 2.2);
+	Matvey.create_account(user_bank::TypeScore::deposit, 44444, 7.5);
 
 
-	Matvey.create_new_account(user_bank::TypeScore::calculated, 11111);
+	Matvey.create_account(user_bank::TypeScore::calculated, 11111);
 
 
 }
@@ -261,22 +262,22 @@ TEST(AccountTests, Perepoln2) {
 	cout << "\nВ тесте проверяется переполнение массива элементов" << endl;
 
 	user_bank::User Matvey("Пихуров Матвей");
-	Matvey.create_new_account(user_bank::TypeScore::calculated, 11111);
-	Matvey.create_new_account(user_bank::TypeScore::deposit, 22222, 1.1);
-	Matvey.create_new_account(user_bank::TypeScore::credit, 33333, 2.2);
-	Matvey.create_new_account(user_bank::TypeScore::deposit, 44444, 7.5);
-	Matvey.create_new_account(user_bank::TypeScore::calculated, 55555);
-	Matvey.create_new_account(user_bank::TypeScore::credit, 66666, 5.5);
-	Matvey.create_new_account(user_bank::TypeScore::calculated, 11111);
-	Matvey.create_new_account(user_bank::TypeScore::deposit, 22222, 1.1);
-	Matvey.create_new_account(user_bank::TypeScore::credit, 33333, 2.2);
-	Matvey.create_new_account(user_bank::TypeScore::deposit, 44444, 7.5);
-	Matvey.create_new_account(user_bank::TypeScore::calculated, 55555);
-	Matvey.create_new_account(user_bank::TypeScore::credit, 66666, 5.5);
-	Matvey.create_new_account(user_bank::TypeScore::calculated, 11111);
-	Matvey.create_new_account(user_bank::TypeScore::deposit, 22222, 1.1);
-	Matvey.create_new_account(user_bank::TypeScore::credit, 33333, 2.2);
-	Matvey.create_new_account(user_bank::TypeScore::deposit, 44444, 7.5);
+	Matvey.create_account(user_bank::TypeScore::calculated, 11111);
+	Matvey.create_account(user_bank::TypeScore::deposit, 22222, 1.1);
+	Matvey.create_account(user_bank::TypeScore::credit, 33333, 2.2);
+	Matvey.create_account(user_bank::TypeScore::deposit, 44444, 7.5);
+	Matvey.create_account(user_bank::TypeScore::calculated, 55555);
+	Matvey.create_account(user_bank::TypeScore::credit, 66666, 5.5);
+	Matvey.create_account(user_bank::TypeScore::calculated, 11111);
+	Matvey.create_account(user_bank::TypeScore::deposit, 22222, 1.1);
+	Matvey.create_account(user_bank::TypeScore::credit, 33333, 2.2);
+	Matvey.create_account(user_bank::TypeScore::deposit, 44444, 7.5);
+	Matvey.create_account(user_bank::TypeScore::calculated, 55555);
+	Matvey.create_account(user_bank::TypeScore::credit, 66666, 5.5);
+	Matvey.create_account(user_bank::TypeScore::calculated, 11111);
+	Matvey.create_account(user_bank::TypeScore::deposit, 22222, 1.1);
+	Matvey.create_account(user_bank::TypeScore::credit, 33333, 2.2);
+	Matvey.create_account(user_bank::TypeScore::deposit, 44444, 7.5);
 
 
 	Matvey.create_new_account_in_index( 5,user_bank::TypeScore::calculated, 11111);
@@ -289,13 +290,13 @@ TEST(AccountTests, FindMaxBalanceTest) {
 
 	user_bank::TypeScore type_deposit = user_bank::TypeScore::deposit;	// 1 - рассчётный счёт; 2 - депозитарный; 3 - кредитный
 	user_bank::User Matvey("Pikhurov Matvey\0");
-	Matvey.create_new_account(type_deposit, 100000, 8.7);
+	Matvey.create_account(type_deposit, 100000, 8.7);
 
 	user_bank::TypeScore type_calculated = user_bank::TypeScore::calculated;
-	Matvey.create_new_account(type_calculated, 30000);
+	Matvey.create_account(type_calculated, 30000);
 
 	user_bank::TypeScore type_credit = user_bank::TypeScore::credit;
-	Matvey.create_new_account(type_credit, 150000, 4);
+	Matvey.create_account(type_credit, 150000, 4);
 
 	int index_of_max_balance_in_accounts = Matvey.find_max_balance();
 	
@@ -315,7 +316,7 @@ TEST(AccountTests, AccrualTest1) {
 	user_bank::User Matvey("Pikhurov Matvey");
 
 	user_bank::TypeScore type_of_account = user_bank::TypeScore::calculated;
-	Matvey.create_new_account(type_of_account, 100000);
+	Matvey.create_account(type_of_account, 100000);
 
 	float first_balance = Matvey[0].getBalance();
 	//cout << first_balance << endl;
@@ -335,7 +336,7 @@ TEST(AccountTests, AccrualTest2) {
 
 	user_bank::TypeScore type_of_account = user_bank::TypeScore::credit;
 	percent = 7;
-	Matvey.create_new_account(type_of_account, -100000, percent);
+	Matvey.create_account(type_of_account, -100000, percent);
 
 	float first_balance = Matvey[0].getBalance();
 	//cout << first_balance << endl;
@@ -355,7 +356,7 @@ TEST(AccountTests, AccrualTest3) {
 
 	user_bank::TypeScore type_of_account = user_bank::TypeScore::deposit;
 	percent = 8;
-	Matvey.create_new_account(type_of_account, 100000, percent);
+	Matvey.create_account(type_of_account, 100000, percent);
 
 	float first_balance = Matvey[0].getBalance();
 	//cout << first_balance << endl;
@@ -374,10 +375,10 @@ TEST(AccountTests, DeleteScore1) {
 	user_bank::User Matvey("Pikhurov Matvey");
 
 	user_bank::TypeScore type_of_account = user_bank::TypeScore::calculated;
-	Matvey.create_new_account(type_of_account, 100000);
+	Matvey.create_account(type_of_account, 100000);
 
 	type_of_account = user_bank::TypeScore::credit;
-	Matvey.create_new_account(type_of_account, 200000, 6.6);
+	Matvey.create_account(type_of_account, 200000, 6.6);
 
 	user_bank::TypeScore before_delete = Matvey[1].getType();
 
@@ -396,22 +397,22 @@ TEST(AccountTests, DeleteScore2) {
 	user_bank::User Matvey("Pikhurov Matvey");
 
 	user_bank::TypeScore type_of_account = user_bank::TypeScore::calculated;
-	Matvey.create_new_account(type_of_account, 100000);
+	Matvey.create_account(type_of_account, 100000);
 
 	type_of_account = user_bank::TypeScore::credit;
-	Matvey.create_new_account(type_of_account, 200000, 6.6);
+	Matvey.create_account(type_of_account, 200000, 6.6);
 
 	type_of_account = user_bank::TypeScore::deposit;
-	Matvey.create_new_account(type_of_account, 44000, 7.8);
+	Matvey.create_account(type_of_account, 44000, 7.8);
 
 	type_of_account = user_bank::TypeScore::credit;
-	Matvey.create_new_account(type_of_account, -999999, 1.3);
+	Matvey.create_account(type_of_account, -999999, 1.3);
 
 	type_of_account = user_bank::TypeScore::calculated;
-	Matvey.create_new_account(type_of_account, 888888);
+	Matvey.create_account(type_of_account, 888888);
 
 	type_of_account = user_bank::TypeScore::credit;
-	Matvey.create_new_account(type_of_account, 200000, 6.6);
+	Matvey.create_account(type_of_account, 200000, 6.6);
 
 	unsigned int before_delete = Matvey.get_count_accounts();
 
@@ -423,7 +424,24 @@ TEST(AccountTests, DeleteScore2) {
 	user_bank::Account el_with_index_3_after = Matvey[3];
 
 	EXPECT_EQ(before_delete - 1, after_delete);
-
 }
 
+TEST(AccountTests, COUT) {
+	setlocale(LC_ALL, "ru");
+	cout << "\nВывод" << endl;
+
+	user_bank::User Matvey("Pikhurov Matvey");
+
+	user_bank::TypeScore type_of_account = user_bank::TypeScore::calculated;
+	Matvey.create_account(type_of_account, 100000);
+
+	type_of_account = user_bank::TypeScore::credit;
+	Matvey.create_account(type_of_account, 200000, 6.6);
+
+	Matvey[0] = Matvey[1];
+
+	cout << Matvey[0] << endl;
+	system("pause");
+
+}
 
