@@ -14,8 +14,8 @@ using namespace std;
 
 
 // Определение работы класса Account
-Account::Account(): balance(0), type(TypeScore::none), percent(0) {}
-Account::Account(TypeScore type_of_score, float set_balance): balance(set_balance), percent(0) {
+                Account::Account(): balance(0), type(TypeScore::none), percent(0) {}
+                Account::Account(TypeScore type_of_score, float set_balance): balance(set_balance), percent(0) {
     switch (type_of_score)
     {
     case TypeScore::calculated:
@@ -33,7 +33,7 @@ Account::Account(TypeScore type_of_score, float set_balance): balance(set_balanc
     if (type != type_of_score)
         throw runtime_error("Не удалось присвоить тип счёта");
 };
-Account::Account(TypeScore type_of_score, float set_balance, float percent): balance(set_balance), percent(percent) {
+                Account::Account(TypeScore type_of_score, float set_balance, float percent): balance(set_balance), percent(percent) {
     switch (type_of_score)
     {
     case TypeScore::calculated:
@@ -51,12 +51,12 @@ Account::Account(TypeScore type_of_score, float set_balance, float percent): bal
     if (type != type_of_score)
         throw runtime_error("Не удалось присвоить тип счёта");
 }
-Account::Account(const Account& account_for_copy) {
+                Account::Account(const Account& account_for_copy) {
     this->type = account_for_copy.type;
     this->balance = account_for_copy.balance;
     this->percent = account_for_copy.percent;
 }
-void        Account::accrual() {
+void            Account::accrual() {
     switch (type)
     {
     case user_bank::TypeScore::calculated:
@@ -74,58 +74,49 @@ void        Account::accrual() {
         break;
     };
 };
-float       Account::getBalance() {
+float           Account::getBalance() {
     return this->balance;
 }; 
-void        Account::setBalance(float balance) {
+void            Account::setBalance(float balance) {
     this->balance = balance;
 };
-float       Account::getPercent() {
+float           Account::getPercent() {
     return this->percent;
 };
-void        Account::setPercent(float percent) {
+void            Account::setPercent(float percent) {
     this->percent = percent;
 }
-TypeScore	Account::getType() {
+TypeScore	    Account::getType() {
     return this->type;
 }
-Account&    Account::overwrite(TypeScore type_of_score, float balance, float percent) {
+Account&        Account::overwrite(TypeScore type_of_score, float balance, float percent) {
     this->type = type_of_score;
     this->balance = balance;
     this->percent = percent;
 
     return *this;
 }
-Account&    Account::overwrite(TypeScore type_of_score, float balance) {
+Account&        Account::overwrite(TypeScore type_of_score, float balance) {
     this->type = type_of_score;
     this->balance = balance;
     this->percent = 0;
 
     return *this;
 }
-Account&    Account::deleteScore() {
+Account&        Account::deleteScore() {
     this->type = TypeScore::none;
     this->balance = 0;
     this->percent = 0;
     return *this;
 }
-Account&    Account::operator=(const Account& r) {
+Account&        Account::operator=(const Account& r) {
     this->type = r.type;
     this->balance = r.balance;
     this->percent = r.percent;
 
     return *this;
 }
-//Account     Account::operator=(const Account r) {
-//    this->type = r.type;
-//    this->balance = r.balance;
-//    this->percent = r.percent;
-//
-//    return *this;
-//}
-
-std::ostream& user_bank::operator<<(std::ostream& stream, const TypeScore item) {
-    //stream << "calculated" << endl;
+std::ostream&   user_bank::operator<<(std::ostream& stream, const TypeScore item) {
     switch (item)
     {
     case user_bank::TypeScore::none:
@@ -146,10 +137,8 @@ std::ostream& user_bank::operator<<(std::ostream& stream, const TypeScore item) 
     }
     return stream;
 }
-
-std::ostream& user_bank::operator<< (std::ostream& stream, user_bank::Account& item) {
+std::ostream&   user_bank::operator<< (std::ostream& stream, user_bank::Account& item) {
     
-    //out << "Balance: " << item.getBalance() << endl;
     if (item.getType() == TypeScore::credit || item.getType() == TypeScore::deposit)
     {
         stream << "Balance: " << item.getBalance() << endl;

@@ -30,7 +30,6 @@ namespace user_bank {
 		Account&	overwrite(TypeScore type_of_score, float balance, float percent);
 		Account&	overwrite(TypeScore type_of_score, float balance);
 		Account&	operator=(const Account& r);
-		//Account		operator=(const Account r);
 		~Account()
 		{
 			//std::cout << "dtor()" << std::endl;

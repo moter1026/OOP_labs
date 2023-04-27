@@ -12,7 +12,6 @@ namespace user_bank {
 		string				all_name;
 		int					count_accounts = 0;
 		Account**			accounts = new Account*[1];
-		Account&			select_account_with_index(unsigned int index);
 		void				rewrite_array_with_acconts();
 	public:
 		User();

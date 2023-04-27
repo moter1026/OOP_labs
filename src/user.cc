@@ -22,11 +22,13 @@ void check(TypeScore type, float balance, float percent) {
 }
 
 // Определение работы класса User
-User::User() {
+            User::User() {
     all_name = " ";
 };
-
-void User::rewrite_array_with_acconts() {
+            User::User(const char* name) {
+    all_name = name;
+};
+void        User::rewrite_array_with_acconts() {
     Account** acc = new Account * [count_accounts + 1];
     for (int i = 0; i < count_accounts; i++) {
         acc[i] = accounts[i];
@@ -35,8 +37,7 @@ void User::rewrite_array_with_acconts() {
     delete[] accounts;
     accounts = acc;
 }
-
-Account& User::create_account(unsigned int index, TypeScore type, float balance) {
+Account&    User::create_account(unsigned int index, TypeScore type, float balance) {
     check(type, balance, 0);
     if (index >= this->count_accounts)
     {
@@ -49,7 +50,7 @@ Account& User::create_account(unsigned int index, TypeScore type, float balance)
     ++this->count_accounts;
     return accounts[index][0];
 }
-Account& User::create_account(unsigned int index, TypeScore type, float balance, float percent) {
+Account&    User::create_account(unsigned int index, TypeScore type, float balance, float percent) {
     check(type, balance, percent);
     if (index >= this->count_accounts)
     {
@@ -62,7 +63,7 @@ Account& User::create_account(unsigned int index, TypeScore type, float balance,
     ++this->count_accounts;
     return accounts[index][0];
 }
-Account& User::create_account(TypeScore type, float balance, float percent) {
+Account&    User::create_account(TypeScore type, float balance, float percent) {
     check(type, balance, percent);
     rewrite_array_with_acconts();
     int index = this->count_accounts;
@@ -72,7 +73,7 @@ Account& User::create_account(TypeScore type, float balance, float percent) {
     ++this->count_accounts;
     return accounts[index][0];
 }
-Account& User::create_account(TypeScore type, float balance) {
+Account&    User::create_account(TypeScore type, float balance) {
     check(type, balance, 0);
     rewrite_array_with_acconts();
     int index = this->count_accounts;
@@ -82,11 +83,7 @@ Account& User::create_account(TypeScore type, float balance) {
     ++this->count_accounts;
     return accounts[index][0];
 }
-
-User::User(const char* name) {
-    all_name = name;
-};
-string User::get_all_name() {
+string      User::get_all_name() {
     return this->all_name;
 };
 int			User::get_count_accounts() {
@@ -106,7 +103,7 @@ int         User::find_max_balance() {
     }
     return index;
 };
-Account& User::create_new_account(Account* new_account) {
+Account&    User::create_new_account(Account* new_account) {
     Account** acc = new Account*[count_accounts + 1];
     for (int i = 0; i < count_accounts; i++){
         acc[i] = accounts[i];
@@ -117,7 +114,7 @@ Account& User::create_new_account(Account* new_account) {
     ++count_accounts;
     return *accounts[count_accounts];
 };
-Account& User::create_new_account_in_index(unsigned int index, TypeScore type, float balance) {
+Account&    User::create_new_account_in_index(unsigned int index, TypeScore type, float balance) {
     check(type, balance, 0);
     rewrite_array_with_acconts();
     if (index >= this->count_accounts) {
@@ -134,7 +131,7 @@ Account& User::create_new_account_in_index(unsigned int index, TypeScore type, f
             return create_account(index, type, balance);
     }
 }
-Account& User::create_new_account_in_index(unsigned int index, TypeScore type, float balance, float percent) {
+Account&    User::create_new_account_in_index(unsigned int index, TypeScore type, float balance, float percent) {
     check(type, balance, percent);
     rewrite_array_with_acconts();
     if (index >= this->count_accounts) {
@@ -178,21 +175,19 @@ Account     User::delete_account_with_index(unsigned int index) {
     }
 
 }
-Account& User::operator[](size_t size) {
+Account&    User::operator[](size_t size) {
     if (size >= count_accounts)
     {
         throw runtime_error("Неверно передан индекс. По данному индексу нет никакого аккаунта!");
     }
     return accounts[size][0];
 };
-
-void user_bank::User::swap(User& user_swap) noexcept
+void        User::swap(User& user_swap) noexcept
 {
     std::swap(all_name, user_swap.all_name);
     std::swap(accounts, user_swap.accounts);
 }
-;
-User& user_bank::User::operator=(user_bank::User user_cpy) {
+User&       User::operator=(user_bank::User user_cpy) {
     User::swap(user_cpy);
     return *this;
 };
