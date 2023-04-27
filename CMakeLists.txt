@@ -18,7 +18,7 @@ if(MSVC)
 endif()
 
 # Объявляем библиотеку
-add_library(account SHARED "include/account/account.h" "src/account.cc" "include/account/user.h" "src/user.cc")
+add_library(account SHARED "include/account/account.h" "src/account.cc" "include/account/user.h" "src/user.cc" "console app/console app.cc")
 target_include_directories(account PUBLIC "include")
 
 # Подключаем googletest
@@ -28,5 +28,5 @@ set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 
 # Объявляем тесты
-add_executable(account_tests "tests/account_tests.cc")
+add_executable(account_tests "tests/account_tests.cc" "console app/console app.cc")
 target_link_libraries(account_tests account GTest::gtest_main)

@@ -28,6 +28,9 @@ void check(TypeScore type, float balance, float percent) {
             User::User(const char* name) {
     all_name = name;
 };
+            User::User(string name) {
+    all_name = name;
+};
 void        User::rewrite_array_with_acconts() {
     Account** acc = new Account * [count_accounts + 1];
     for (int i = 0; i < count_accounts; i++) {
@@ -120,7 +123,7 @@ Account&    User::create_new_account_in_index(unsigned int index, TypeScore type
     if (index >= this->count_accounts) {
         index = this->count_accounts;
     }
-    for (size_t i = 0; i < this->count_accounts; i++)
+    for (size_t i = 0; i <= this->count_accounts; i++)
     {
         if (index < this->count_accounts - i) {
             Account& left = accounts[this->count_accounts - 1 - i][0];
@@ -137,7 +140,7 @@ Account&    User::create_new_account_in_index(unsigned int index, TypeScore type
     if (index >= this->count_accounts) {
         index = this->count_accounts;
     }
-    for (size_t i = 0; i < this->count_accounts; i++)
+    for (size_t i = 0; i <= this->count_accounts; i++)
     {
         if (index < this->count_accounts - i) {
             Account& left = accounts[this->count_accounts - 1 - i][0];
@@ -192,3 +195,15 @@ User&       User::operator=(user_bank::User user_cpy) {
     return *this;
 };
 
+std::ostream& user_bank::operator << (std::ostream& stream, User& user) {
+    stream << "Имя пользователя: " << user.get_all_name() << std::endl;
+    stream << "Кол-во открытых счетов: " << user.get_count_accounts() << std::endl;
+    if (user.get_count_accounts() != 0)
+    {
+        for (int i = 0; i < user.get_count_accounts(); ++i) {
+            stream << "Аккаунт номер " << i << std::endl;
+            stream << user[i] << endl;
+        }
+    }
+    return stream;
+}

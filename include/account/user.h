@@ -16,6 +16,7 @@ namespace user_bank {
 	public:
 		User();
 		User(const char* name);
+		User(string name);
 		string		get_all_name();
 		int			get_count_accounts();
 		int			find_max_balance();
@@ -46,4 +47,6 @@ namespace user_bank {
 			count_accounts = 0;
 		}
 	};
+	std::ostream& operator << (std::ostream& stream, User& item);
+	//std::ostream& operator << (std::ostream& stream, const TypeScore item);
 };
