@@ -62,11 +62,11 @@ void            Account::accrual() {
     case user_bank::TypeScore::calculated:
         break;
     case user_bank::TypeScore::deposit:
-        this->balance += this->balance * this->percent / 12;
+        this->balance += this->balance * this->percent / 100 / 12;
         break;
     case user_bank::TypeScore::credit:
         if (this->balance < 0) {            //Баланс не отрицательный, поэтому изменений нет
-            this->balance -= fabs(this->balance) * (this->percent) / 12;
+            this->balance -= fabs(this->balance) * (this->percent / 100) / 12;
         }
         break;
     default:

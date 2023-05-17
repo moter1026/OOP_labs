@@ -17,6 +17,7 @@ namespace user_bank {
 		User();
 		User(const char* name);
 		User(string name);
+		User(const User& user_for_copy);
 		string		get_all_name();
 		int			get_count_accounts();
 		int			find_max_balance();
