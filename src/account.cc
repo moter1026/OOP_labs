@@ -1,158 +1,159 @@
 ﻿#include <account/account.h>
 #include <math.h>
-#include <string.h>
 #include <exception>
 #include <stdexcept>
 #include <iostream>
-#define N 255
-//#define MAX_COUNT_ACCOUNTS 7
+#include <vector>
 
 using namespace user_bank;
 using namespace std;
 
+//____________________Account________________________
+Account::Account(float balance, float percent) {
+	this->_balance = balance;
+	this->_percent = percent;
+}
+float	Account::getBalance() const noexcept {
+	return this->_balance;
+};
+void	Account::setBalance(float balance) {
+	this->_balance = balance;
+}
+float		Account::getPercent() const noexcept {
+	return this->_percent;
+};
+bool		Account::operator==(Account user_cpy) {
+	if (this->_balance == user_cpy._balance &&
+		this->_percent == user_cpy._percent &&
+		this->_type == user_cpy._type)
+		return true;
+	return false;
+}
+void user_bank::Account::print(std::ostream& stream) const
+{
+		stream << "Balance: " << this->getBalance() << endl;
+		stream << "Percent: " << this->getPercent() << endl;
+		stream << "Type: " << this->getType() << endl;
+}
+Account& Account::deleteScore() noexcept {
+	this->_percent = 0;
+	this->_balance = 0;
+	this->_type = "";
+	return *this;
+}
+std::string Account::getType() const {
+	return this->_type;
+}
 
 
 
-// Определение работы класса Account
-                Account::Account(): balance(0), type(TypeScore::none), percent(0) {}
-                Account::Account(TypeScore type_of_score, float set_balance): balance(set_balance), percent(0) {
-    switch (type_of_score)
-    {
-    case TypeScore::calculated:
-        type = TypeScore::calculated;
-        break;
-    case TypeScore::deposit:
-        type = TypeScore::deposit;
-        break;
-    case TypeScore::credit:
-        type = TypeScore::credit;
-        break;
-    default:
-        break;
+
+//____________________AccountCalculated________________________
+AccountCalculated::AccountCalculated(){
+	this->_percent = 0;
+	this->_balance = 0;
+	this->_type = "Calculated";
+}
+AccountCalculated::AccountCalculated(float balance) {
+	this->_percent = 0;
+	this->_balance = balance;
+	this->_type = "Calculated";
+}
+AccountCalculated::AccountCalculated(float balance, float percent) {
+	if (percent)
+		throw runtime_error("В расчётном счёте не должно быть процентов!");
+	this->_percent = 0;
+	this->_balance = balance;
+	this->_type = "Calculated";
+}
+std::shared_ptr<Account> AccountCalculated::clone() const
+{
+	return std::make_shared<AccountCalculated>(this->_balance, this->_percent);
+}
+void user_bank::AccountCalculated::print(std::ostream& stream) const
+{
+	stream << "Balance: " << this->getBalance() << endl;
+	stream << "Type: " << this->getType() << endl;
+}
+void user_bank::AccountCalculated::accrual()
+{
+	this->_balance += this->_balance * this->_percent / 100 / 12;
+}
+
+
+// _________________AccountCredit_________________
+AccountCredit::AccountCredit()
+{
+	this->_balance = 0;
+	this->_percent = 0;
+	this->_type = "Credit";
+}
+AccountCredit::AccountCredit(float balance, float percent) {
+	this->_percent = percent;
+	this->_balance = balance;
+	this->_type = "Credit";
+}
+std::shared_ptr<Account> AccountCredit::clone() const
+{
+	return make_shared<AccountCredit>(this->_balance, this->_percent);
+}
+;
+void		AccountCredit::accrual() {
+	if (this->_balance < 0) {            //Баланс не отрицательный, поэтому изменений нет
+        this->_balance -= fabs(this->_balance) * (this->_percent / 100) / 12;
     }
-    if (type != type_of_score)
-        throw runtime_error("Не удалось присвоить тип счёта");
-};
-                Account::Account(TypeScore type_of_score, float set_balance, float percent): balance(set_balance), percent(percent) {
-    switch (type_of_score)
-    {
-    case TypeScore::calculated:
-        type = TypeScore::calculated;
-        break;
-    case TypeScore::deposit:
-        type = TypeScore::deposit;
-        break;
-    case TypeScore::credit:
-        type = TypeScore::credit;
-        break;
-    default:
-        break;
-    }
-    if (type != type_of_score)
-        throw runtime_error("Не удалось присвоить тип счёта");
 }
-                Account::Account(const Account& account_for_copy) {
-    this->type = account_for_copy.type;
-    this->balance = account_for_copy.balance;
-    this->percent = account_for_copy.percent;
-}
-void            Account::accrual() {
-    switch (type)
-    {
-    case user_bank::TypeScore::calculated:
-        break;
-    case user_bank::TypeScore::deposit:
-        this->balance += this->balance * this->percent / 100 / 12;
-        break;
-    case user_bank::TypeScore::credit:
-        if (this->balance < 0) {            //Баланс не отрицательный, поэтому изменений нет
-            this->balance -= fabs(this->balance) * (this->percent / 100) / 12;
-        }
-        break;
-    default:
-        throw runtime_error("Тип аккаунта не позволяет совершить действия с его счётом!");
-        break;
-    };
-};
-float           Account::getBalance() {
-    return this->balance;
-}; 
-void            Account::setBalance(float balance) {
-    this->balance = balance;
-};
-float           Account::getPercent() {
-    return this->percent;
-};
-void            Account::setPercent(float percent) {
-    this->percent = percent;
-}
-TypeScore	    Account::getType() {
-    return this->type;
-}
-Account&        Account::overwrite(TypeScore type_of_score, float balance, float percent) {
-    this->type = type_of_score;
-    this->balance = balance;
-    this->percent = percent;
 
-    return *this;
-}
-Account&        Account::overwrite(TypeScore type_of_score, float balance) {
-    this->type = type_of_score;
-    this->balance = balance;
-    this->percent = 0;
+//void		AccountCredit::swap(AccountCredit& acc) noexcept {
+//	std::swap(this->_balance, acc._balance);
+//	std::swap(this->_percent, acc._balance);
+//}
+void		AccountCredit::setPercent(float percent) {
+	this->_percent = percent;
+};
 
-    return *this;
+// _________________AccountDeposit_________________
+AccountDeposit::AccountDeposit() {
+	this->_balance = 0;
+	this->_percent = 0;
+	this->_type = "Deposit";
+};
+AccountDeposit::AccountDeposit(float balance, float percent) {
+	this->_balance = balance;
+	this->_percent = percent;
+	this->_type = "Deposit";
+};
+void				AccountDeposit::accrual() {
+	this->_balance += this->_balance * this->_percent / 100 / 12;
 }
-Account&        Account::deleteScore() {
-    this->type = TypeScore::none;
-    this->balance = 0;
-    this->percent = 0;
-    return *this;
-}
-Account&        Account::operator=(const Account& r) {
-    this->type = r.type;
-    this->balance = r.balance;
-    this->percent = r.percent;
 
-    return *this;
+shared_ptr<Account> AccountDeposit::clone() const
+{
+	return make_shared<AccountDeposit>(this->_balance, this->_percent);
 }
-std::ostream&   user_bank::operator<<(std::ostream& stream, const TypeScore item) {
-    switch (item)
-    {
-    case user_bank::TypeScore::none:
-        stream << "none" << endl;
-        break;
-    case user_bank::TypeScore::calculated:
-        stream << "calculated" << endl;
-        break;
-    case user_bank::TypeScore::deposit:
-        stream << "deposit" << endl;
-        break;
-    case user_bank::TypeScore::credit:
-        stream << "credit" << endl;
-        break;
-    default:
-        throw runtime_error("ошибка вывода типа");
-        break;
-    }
-    return stream;
-}
+void				AccountDeposit::setPercent(float percent) {
+	this->_percent = percent;
+};
+
+
 std::ostream&   user_bank::operator<< (std::ostream& stream, user_bank::Account& item) {
-    
-    if (item.getType() == TypeScore::credit || item.getType() == TypeScore::deposit)
-    {
-        stream << "Balance: " << item.getBalance() << endl;
-        stream << "Percent: " << item.getPercent() << endl;
-        stream << "Type: " << item.getType() << endl;
-    }
-    else
-    {
-        stream << "Balance: " << item.getBalance() << endl;
-        stream << "Type: " << item.getType() << endl;
-    }
-    
-    return stream;
+	item.print(stream);
+	return stream;
 }
-
-
-
+//std::ostream&   user_bank::operator<< (std::ostream& stream, user_bank::AccountCalculated& item) {
+//    stream << "Balance: " << item.getBalance() << endl;
+//    stream << "Type: Calculated" << endl;
+//    return stream;
+//}
+//std::ostream& user_bank::operator<< (std::ostream& stream, user_bank::AccountCredit& item) {
+//	stream << "Balance: " << item.getBalance() << endl;
+//    stream << "Percent: " << item.getPercent() << endl;
+//    stream << "Type: Credit" << endl;
+//	return stream;
+//}
+//std::ostream& user_bank::operator<< (std::ostream& stream, user_bank::AccountDeposit& item) {
+//	stream << "Balance: " << item.getBalance() << endl;
+//	stream << "Percent: " << item.getPercent() << endl;
+//	stream << "Type: Deposit" << endl;
+//	return stream;
+//}

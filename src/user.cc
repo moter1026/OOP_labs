@@ -1,3 +1,4 @@
+п»ї#include "..\include\account\user.h"
 #include <account/user.h>
 #include <math.h>
 #include <string.h>
@@ -5,212 +6,162 @@
 #include <stdexcept>
 #include <iostream>
 #include <string.h>
+#include <typeinfo>
 #define N 255
 
 using namespace user_bank;
 using namespace std;
 
-
-void check(TypeScore type, float balance, float percent) {
-    if (type == TypeScore::calculated && percent != 0)
-        throw runtime_error("Ошибка программиста, для рассчётного счёта кол-во процентов годовых не нужно указывать или они должны быть равны 0!");
-    if (balance < 0 && type != TypeScore::credit)
-        throw runtime_error("Нельзя создать не кредитный счёт с балансом меньше 0");
-    if (percent < 0)
-        throw runtime_error("Нельзя создать счёт с кол-вом процентов годовых меньше 0");
-}
-
-// Определение работы класса User
-User::User() {
-    all_name = " ";
+User::User() noexcept {
+    _all_name = " ";
 };
-User::User(const char* name) {
-    all_name = name;
+
+User::User(const char* name) noexcept {
+    _all_name = name;
 };
-User::User(string name) {
-    all_name = name;
+User::User(string name) noexcept {
+    _all_name = name;
 };
 User::User(const User& user_for_copy) {
-    this->all_name = user_for_copy.all_name;
-    this->count_accounts = user_for_copy.count_accounts;
-    this->accounts = new Account * [this->count_accounts];
-    for (int i = 0; i < this->count_accounts; i++)
-    {
-        this->accounts[i] = user_for_copy.accounts[i];
-    }
-};
-void        User::rewrite_array_with_acconts() {
-    Account** acc = new Account * [count_accounts + 1];
-    for (int i = 0; i < count_accounts; i++) {
-        acc[i] = accounts[i];
-    }
-    acc[count_accounts] = new Account();
-    delete[] accounts;
-    accounts = acc;
+    this->_all_name = user_for_copy._all_name;
+    this->_accounts = user_for_copy._accounts;
 }
-Account& User::create_account(unsigned int index, TypeScore type, float balance) {
-    check(type, balance, 0);
-    if (index >= this->count_accounts)
-    {
-        rewrite_array_with_acconts();
-        index = this->count_accounts;
-    }
-    *(accounts[index]) = Account(type, balance);
-    accounts[index]->setPercent(0);
-
-    ++this->count_accounts;
-    return *(accounts[index]);
+string  User::get_all_name() const
+{
+    return this->_all_name;
 }
-Account& User::create_account(unsigned int index, TypeScore type, float balance, float percent) {
-    check(type, balance, percent);
-    if (index >= this->count_accounts)
-    {
-        rewrite_array_with_acconts();
-        index = this->count_accounts;
-    }
-    *(accounts[index]) = Account(type, balance);
-    accounts[index]->setPercent(percent);
-
-    ++this->count_accounts;
-    return *(accounts[index]);
+int		User::get_count_accounts() const {
+    return this->_accounts.size(); 
 }
-Account& User::create_account(TypeScore type, float balance, float percent) {
-    check(type, balance, percent);
-    rewrite_array_with_acconts();
-    int index = this->count_accounts;
-    *(accounts[index]) = Account(type, balance);
-    accounts[index]->setPercent(percent);
-
-    ++this->count_accounts;
-    return *(accounts[index]);
-}
-Account& User::create_account(TypeScore type, float balance) {
-    check(type, balance, 0);
-    rewrite_array_with_acconts();
-    int index = this->count_accounts;
-    *(accounts[index]) = Account(type, balance);
-    accounts[index]->setPercent(0);
-
-    ++this->count_accounts;
-    return *(accounts[index]);
-}
-string      User::get_all_name() {
-    return this->all_name;
-};
-int			User::get_count_accounts() {
-    return this->count_accounts;
-}
-int         User::find_max_balance() {
-    if (this->count_accounts <= 0)
-        throw runtime_error("Ещё не открыто ни одного счёта");
-    float max_balance = accounts[0]->getBalance();
+int		User::find_max_balance() const {
+    if (this->_accounts.size() <= 0)
+        throw runtime_error("Р•С‰С‘ РЅРµ РѕС‚РєСЂС‹С‚Рѕ РЅРё РѕРґРЅРѕРіРѕ СЃС‡С‘С‚Р°");
     int index = 0;
-    for (int i = 1; i < this->count_accounts; i++)
+    float max_balance = this->_accounts.at(index)->getBalance();
+    for (int i = 1; i < this->_accounts.size(); i++)
     {
-        if (max_balance < accounts[i]->getBalance()) {
-            max_balance = accounts[i]->getBalance();
+        if (max_balance < this->_accounts.at(i)->getBalance()) {
+            max_balance = this->_accounts.at(i)->getBalance();
             index = i;
         }
     }
     return index;
+}
+
+Account& User::create_account(sharedAcc item) {
+	_accounts.push_back(item);
+	return *_accounts.back();
 };
-Account& User::create_new_account(Account* new_account) {
-    Account** acc = new Account * [count_accounts + 1];
-    for (int i = 0; i < count_accounts; i++) {
-        acc[i] = accounts[i];
-    }
-    acc[count_accounts] = new_account;
-    delete[] accounts;
-    accounts = acc;
-    ++count_accounts;
-    return *accounts[count_accounts];
-};
-Account& User::create_new_account_in_index(unsigned int index, TypeScore type, float balance) {
-    check(type, balance, 0);
-    rewrite_array_with_acconts();
-    if (index >= this->count_accounts) {
-        index = this->count_accounts;
-    }
-    for (size_t i = 0; i <= this->count_accounts; i++)
+Account& User::create_account(float balance) {
+    return *(new AccountCalculated(balance));
+}
+Account& User::create_account(string type, float balance, float percent) {
+    if (_stricmp("deposit", type.c_str() ) == 0) // <string>.c_str РџСЂРµРѕР±СЂР°Р·СѓРµС‚ РёР· std::string РІ const char*
     {
-        if (index < this->count_accounts - i) {
-            Account& left = *accounts[this->count_accounts - 1 - i];
-            Account& right = *accounts[this->count_accounts - i];
-            right = left;
-        }
-        else
-            return create_account(index, type, balance);
+        if (balance < 0)
+            throw runtime_error("Р’ РґРµРїРѕР·РёС‚РЅРѕРј СЃС‡С‘С‚Рµ РЅРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ РѕС‚СЂРёС†Р°С‚РµР»СЊРЅС‹Р№ СЃС‡С‘С‚!");
+        std::shared_ptr<AccountDeposit> shared_acc = std::make_shared<AccountDeposit>(balance, percent);
+        this->_accounts.push_back(shared_acc);
+        return *this->_accounts.back();
+    }
+    else if (_stricmp("credit", type.c_str()) == 0)
+    {
+        std::shared_ptr<AccountCredit> shared_acc = std::make_shared<AccountCredit>(balance, percent);
+        this->_accounts.push_back(shared_acc);
+        return *this->_accounts.back();
+    }
+    else if (_stricmp("calculated", type.c_str()) == 0)
+    {
+        if (percent != 0)
+            throw runtime_error("Р’ СЂР°СЃС‡С‘С‚РЅРѕРј СЃС‡С‘С‚Рµ РЅРµ РјРѕРіСѓС‚ Р±С‹С‚СЊ РїСЂРѕС†РµРЅС‚С‹ Р±РѕР»СЊС€Рµ 0!");
+        std::shared_ptr<AccountCalculated> shared_acc = std::make_shared<AccountCalculated>(balance, percent);
+        this->_accounts.push_back(shared_acc);
+        return *this->_accounts.back();
     }
 }
-Account& User::create_new_account_in_index(unsigned int index, TypeScore type, float balance, float percent) {
-    check(type, balance, percent);
-    rewrite_array_with_acconts();
-    if (index >= this->count_accounts) {
-        index = this->count_accounts;
-    }
-    for (size_t i = 0; i <= this->count_accounts; i++)
-    {
-        if (index < this->count_accounts - i) {
-            Account& left = *accounts[this->count_accounts - 1 - i];
-            Account& right = *accounts[this->count_accounts - i];
-            right = left;
-        }
-        else if (index < this->count_accounts)
-            return create_account(index, type, balance, percent);
-        else
-            return create_account(this->count_accounts, type, balance, percent);
-
-    }
-}
-Account     User::delete_account_with_index(unsigned int index) {
-    if (!this->count_accounts)
-        throw runtime_error("Нет ни одного аккаунта");
-    if (index >= this->count_accounts)
-        throw runtime_error("Индекс, передаваемый в функцию, слишком большой");
-
-    Account copy_account = *accounts[index];
-    for (size_t i = index; i < this->count_accounts; i++)
-    {
-        if (i < int(this->count_accounts) - 1) {
-            Account& left_el = *accounts[i];
-            Account& right_el = *accounts[i + 1];
-            left_el = right_el;
-        }
-        else
-        {
-            Account& del_el = *accounts[i];
-            del_el.deleteScore();
-            --this->count_accounts;
-            return copy_account;
-        }
-    }
-
-}
-Account& User::operator[](size_t size) {
-    if (size >= count_accounts)
-    {
-        throw runtime_error("Неверно передан индекс. По данному индексу нет никакого аккаунта!");
-    }
-    return *accounts[size];
-};
-void        User::swap(User& user_swap) noexcept
+Account& User::overwrite(unsigned int index, string type, float balance, float percent)
 {
-    std::swap(all_name, user_swap.all_name);
-    std::swap(accounts, user_swap.accounts);
+    this->_accounts.erase(this->_accounts.begin() + index);
+    return create_new_account_in_index(index, type, balance, percent);
 }
-User& User::operator=(user_bank::User user_cpy) {
+template<typename T>
+Account& User::create_new_account_in_index(unsigned int index, std::shared_ptr<T> item) {
+    //vector<std::shared_ptr<AccountCalculated>>::iterator iter = this->_accounts.insert(this->_accounts.begin() + index, item);
+    return this->_accounts.insert(this->_accounts.begin() + index, item);
+};
+Account& User::create_new_account_in_index(unsigned int index, string type, float balance, float percent) {
+    if (index > this->_accounts.size()) index = this->_accounts.size();
+    if (_stricmp("deposit", type.c_str()) == 0)
+    {
+        if (balance < 0)
+            throw runtime_error("Р’ РґРµРїРѕР·РёС‚РЅРѕРј СЃС‡С‘С‚Рµ РЅРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ РѕС‚СЂРёС†Р°С‚РµР»СЊРЅС‹Р№ СЃС‡С‘С‚!");
+        std::shared_ptr<AccountDeposit> shared_acc = std::make_shared<AccountDeposit>(balance, percent);
+        return **this->_accounts.insert(this->_accounts.begin() + index, shared_acc);
+    }
+    else if (_stricmp("credit", type.c_str()) == 0)
+    {
+        std::shared_ptr<AccountCredit> shared_acc = std::make_shared<AccountCredit>(balance, percent);
+        return **this->_accounts.insert(this->_accounts.begin() + index, shared_acc);
+    }
+    else if (_stricmp("calculated", type.c_str()) == 0)
+    {
+        std::shared_ptr<AccountCalculated> shared_acc = std::make_shared<AccountCalculated>(balance, percent);
+        return **this->_accounts.insert(this->_accounts.begin() + index, shared_acc);
+    }
+    //return *new AccountCalculated();
+}
+
+Account		User::delete_account_with_index(unsigned int index) {
+    if (index < this->_accounts.size()-1) {
+        Account copy_acc = *this->_accounts.at(index);
+        this->_accounts.at(index)->deleteScore();
+        this->_accounts.erase(this->_accounts.begin() + index);
+        return copy_acc;
+    }
+    else if (index == this->_accounts.size()-1) {
+        Account copy_acc = *this->_accounts.at(index);
+        this->_accounts.at(index)->deleteScore();
+        this->_accounts.erase(this->_accounts.begin() + index);
+        return copy_acc;
+    }
+    else
+    {
+        throw runtime_error("РџРѕ СЌС‚РѕРјСѓ РёРЅРґРµРєСЃСѓ РЅРµС‡РµРіРѕ СѓРґР°Р»СЏС‚СЊ!");
+    }
+};
+void        User::swap(User& user_swap) noexcept {
+    std::swap(_all_name, user_swap._all_name);
+    std::swap(_accounts, user_swap._accounts);
+}
+User&       User::operator=(user_bank::User user_cpy) {
     User::swap(user_cpy);
     return *this;
 };
-
-std::ostream& user_bank::operator << (std::ostream& stream, User& user) {
-    stream << "Имя пользователя: " << user.get_all_name() << std::endl;
-    stream << "Кол-во открытых счетов: " << user.get_count_accounts() << std::endl;
-    if (user.get_count_accounts() != 0)
+Account&    User::operator[](unsigned int index) const {
+    return *this->_accounts.at(index);
+};
+std::ostream& operator << (std::ostream& stream, User& item) {
+    stream << "РРјСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ: " << item.get_all_name() << std::endl;
+    stream << "РљРѕР»Р»С‡РµСЃС‚РІРѕ РѕС‚РєСЂС‹С‚С‹С… СЃС‡РµС‚РѕРІ: " << item.get_count_accounts() << std::endl;
+    if (item.get_count_accounts() != 0)
     {
-        for (int i = 0; i < user.get_count_accounts(); ++i) {
-            stream << "Аккаунт номер " << i << std::endl;
-            stream << user[i] << endl;
+        for (int i = 0; i < item.get_count_accounts(); ++i) {
+            stream << "РЎС‡С‘С‚ в„–" << i << std::endl;
+            stream << item[i] << endl;
+        }
+    }
+    return stream;
+};
+
+std::ostream& user_bank::operator<<(std::ostream& stream, User& item)
+{
+    stream << "РРјСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ: " << item.get_all_name() << std::endl;
+    stream << "РљРѕР»РёС‡РµСЃС‚РІРѕ РѕС‚РєСЂС‹С‚С‹С… СЃС‡РµС‚РѕРІ: " << item.get_count_accounts() << std::endl;
+    if (item.get_count_accounts() != 0)
+    {
+        for (int i = 0; i < item.get_count_accounts(); ++i) {
+            stream << "РЎС‡С‘С‚ РЅРѕРјРµСЂ: " << i << std::endl;
+            stream << item[i] << endl;
         }
     }
     return stream;

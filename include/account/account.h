@@ -1,41 +1,65 @@
-﻿#define N 255
-#define MAX_COUNT_ACCOUNTS 16
+﻿#define MAX_COUNT_ACCOUNTS 16
 #include <iostream>
+#include <memory>
+#include <string>
 #pragma once
 namespace user_bank {
-	enum class TypeScore {
-		none = 0,
-		calculated,
-		deposit,
-		credit
+	class Account {
+	protected:
+				std::string					_type;
+				float						_balance;
+				float						_percent;
+	public:
+		Account() = default;
+		Account(float balance, float percent);
+		virtual void						accrual() {};
+		//virtual float						getPercent() const noexcept { return 0; };
+		virtual float						getPercent() const noexcept;
+		virtual bool						operator==(Account user_cpy);
+		virtual void						print(std::ostream& stream) const;
+				Account&					deleteScore() noexcept;
+				std::string					getType() const;
+				float						getBalance() const noexcept;
+				void						setBalance(float balance);
+	};
+
+	class AccountCalculated: public Account {
+	private:
+		//std::string					_type = "Calculated";
+	public:
+		AccountCalculated();
+		AccountCalculated(float balance);
+		AccountCalculated(float balance, float percent);
+		std::shared_ptr<Account>	clone() const;
+		void						print(std::ostream& stream) const override;
+		void						accrual() override;
 	};
 	
-	class Account {
+	class AccountCredit		: public Account {
 	private:
-		TypeScore	type = TypeScore::none;
-		float		balance;
-		float		percent;
+		//std::string					_type = "Credit";
 	public:
-		Account();
-		Account(TypeScore type_of_score, float set_balance);
-		Account(TypeScore type_of_score, float set_balance, float percent);
-		Account(const Account& account_for_copy);
-		void		accrual();
-		float		getBalance();
-		void		setBalance(float balance);
-		float		getPercent();
-		void		setPercent(float percent);
-		TypeScore	getType();
-		Account&	deleteScore();
-		Account&	overwrite(TypeScore type_of_score, float balance, float percent);
-		Account&	overwrite(TypeScore type_of_score, float balance);
-		Account&	operator=(const Account& r);
-		~Account()
-		{
-			//std::cout << "dtor()" << std::endl;
-		}
+		AccountCredit();
+		AccountCredit(float balance, float percent);
+		std::shared_ptr<Account>	clone() const ;
+		void						accrual() override;
+		void						setPercent(float percent);
 	};
-	std::ostream& operator << (std::ostream& stream, Account& item);
-	std::ostream& operator << (std::ostream& stream, const TypeScore item);
+	
+	class AccountDeposit	: public Account {
+	private:
+		//std::string					_type = "Deposit";
+	public:
+		AccountDeposit();
+		AccountDeposit(float balance, float percent);
+		std::shared_ptr<Account>	clone() const ;
+		void						accrual() override;
+		void						setPercent(float percent);
+	};
 
+
+	std::ostream& operator << (std::ostream& stream, Account& item);
+	/*std::ostream& operator << (std::ostream& stream, AccountCalculated& item);
+	std::ostream& operator << (std::ostream& stream, AccountCredit& item);
+	std::ostream& operator << (std::ostream& stream, AccountDeposit& item);*/
 };
