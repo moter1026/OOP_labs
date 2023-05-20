@@ -552,4 +552,27 @@ TEST(AccountTests, COUT) {
 		cout << e.what() << endl;
 	}
 }
+TEST(AccountTests, ConstructCopy) {
+	try
+	{
+		setlocale(LC_ALL, "ru");
+		user_bank::User Matvey("Pikhurov Matvey");
+
+		string type_of_account = "Calculated";
+		Matvey.create_account(type_of_account, 100000, 0);
+
+		type_of_account = "Credit";
+		Matvey.create_account(type_of_account, 200000, 6.6);
+
+		user_bank::User Mot(Matvey);
+
+		cout << Matvey << endl;
+		cout << Mot << endl;
+		//system("pause");
+	}
+	catch (const std::runtime_error e)
+	{
+		cout << e.what() << endl;
+	}
+}
 

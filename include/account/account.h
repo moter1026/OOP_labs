@@ -15,12 +15,14 @@ namespace user_bank {
 		virtual void						accrual() {};
 		//virtual float						getPercent() const noexcept { return 0; };
 		virtual float						getPercent() const noexcept;
-		virtual bool						operator==(Account user_cpy);
 		virtual void						print(std::ostream& stream) const;
+		virtual std::shared_ptr<Account>	clone() const { return std::make_shared<Account>(); };
+		bool								operator==(Account user_cpy);
 				Account&					deleteScore() noexcept;
 				std::string					getType() const;
 				float						getBalance() const noexcept;
 				void						setBalance(float balance);
+		virtual ~Account() = default;
 	};
 
 	class AccountCalculated: public Account {
@@ -30,7 +32,7 @@ namespace user_bank {
 		AccountCalculated();
 		AccountCalculated(float balance);
 		AccountCalculated(float balance, float percent);
-		std::shared_ptr<Account>	clone() const;
+		std::shared_ptr<Account>	clone() const override;
 		void						print(std::ostream& stream) const override;
 		void						accrual() override;
 	};
@@ -41,7 +43,7 @@ namespace user_bank {
 	public:
 		AccountCredit();
 		AccountCredit(float balance, float percent);
-		std::shared_ptr<Account>	clone() const ;
+		std::shared_ptr<Account>	clone() const override;
 		void						accrual() override;
 		void						setPercent(float percent);
 	};
@@ -52,7 +54,7 @@ namespace user_bank {
 	public:
 		AccountDeposit();
 		AccountDeposit(float balance, float percent);
-		std::shared_ptr<Account>	clone() const ;
+		std::shared_ptr<Account>	clone() const override;
 		void						accrual() override;
 		void						setPercent(float percent);
 	};

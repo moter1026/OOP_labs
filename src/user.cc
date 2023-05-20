@@ -24,7 +24,12 @@ User::User(string name) noexcept {
 };
 User::User(const User& user_for_copy) {
     this->_all_name = user_for_copy._all_name;
-    this->_accounts = user_for_copy._accounts;
+    //this->_accounts = user_for_copy._accounts;
+    this->_accounts.reserve(user_for_copy.get_count_accounts());
+    for (int i = 0; i < user_for_copy.get_count_accounts(); i++)
+    {
+        this->_accounts.push_back(user_for_copy[i].clone());
+    }
 }
 string  User::get_all_name() const
 {
