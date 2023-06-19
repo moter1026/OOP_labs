@@ -63,14 +63,16 @@ Account& User::create_account(float balance) {
 Account& User::create_account(string type, float balance, float percent) {
     if (_stricmp("deposit", type.c_str() ) == 0) // <string>.c_str Преобразует из std::string в const char*
     {
-        if (balance < 0)
-            throw runtime_error("В депозитном счёте не может быть отрицательный счёт!");
+        if (balance < 0 || percent < 0)
+            throw runtime_error("В депозитном счёте баланс или проценты не могут быть отрицательными!");
         std::shared_ptr<AccountDeposit> shared_acc = std::make_shared<AccountDeposit>(balance, percent);
         this->_accounts.push_back(shared_acc);
         return *this->_accounts.back();
     }
     else if (_stricmp("credit", type.c_str()) == 0)
     {
+        if (percent < 0)
+            throw runtime_error("Проценты не могут быть меньше нуля!");
         std::shared_ptr<AccountCredit> shared_acc = std::make_shared<AccountCredit>(balance, percent);
         this->_accounts.push_back(shared_acc);
         return *this->_accounts.back();
@@ -79,6 +81,8 @@ Account& User::create_account(string type, float balance, float percent) {
     {
         if (percent != 0)
             throw runtime_error("В расчётном счёте не могут быть проценты больше 0!");
+        if (balance < 0)
+            throw runtime_error("В расчётном счёте не может быть отрицательный счёт!");
         std::shared_ptr<AccountCalculated> shared_acc = std::make_shared<AccountCalculated>(balance, percent);
         this->_accounts.push_back(shared_acc);
         return *this->_accounts.back();
